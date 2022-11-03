@@ -1,9 +1,25 @@
 #include <Arduino.h>
 
 #include <Wire.h>  
-#include "RTClib.h"  
+#include <RTClib.h>  
 RTC_DS1307 rtc;  
 char daysOfTheWeek[7][12] = {"Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"}; 
+
+//Programa: Display LCD 16x2
+//Autor: FILIPEFLOP https://www.filipeflop.com/blog/como-utilizar-o-display-lcd-16x2/
+ 
+//Carrega a biblioteca LiquidCrystal
+#include <LiquidCrystal.h>
+ 
+//Define os pinos que serão utilizados para ligação ao display
+LiquidCrystal lcd(12, 11, 5, 4, 3, 2);
+
+
+//Push button
+
+int pushbutton = 2; // declara o push button na porta 2
+int led = 13; // declara led na porta 13
+bool estadoled = 0; // variavel de controle
 
 
 void setup() 
@@ -11,10 +27,17 @@ void setup()
   while (!Serial); // for Leonardo/Micro/Zero  
   Serial.begin(9600);
 
+  //LCD 
+  lcd.begin(16, 2);
+
   //Piscar LED
   pinMode(LED_BUILTIN, OUTPUT);
 
-  //Módulo RTC - Relógio  
+  //Push Button https://guiarobotica.com/push-button-arduino/
+  pinMode(pushbutton, INPUT_PULLUP); // define o pino do botao como entrada
+  pinMode(led, OUTPUT);// define LED como saida
+
+  //Módulo RTC - Relógio https://create.arduino.cc/projecthub/Techatronic/ds1307-rtc-module-with-arduino-54afd1
   if (!rtc.begin()) 
   {  
     Serial.println("Couldn't find RTC");  
@@ -38,6 +61,40 @@ void setup()
 
 void loop() 
 {
+    
+  //Push Button
+  if (digitalRead(pushbutton) == LOW) // Se o botão for pressionado
+  {
+    estadoled = !estadoled; // troca o estado do LED
+    digitalWrite(led, estadoled);
+    while (digitalRead(pushbutton) == LOW);
+    delay(100);
+  }
+
+  //Limpa a tela
+  lcd.clear();
+  //Posiciona o cursor na coluna 3, linha 0;
+  lcd.setCursor(3, 0);
+  //Envia o texto entre aspas para o LCD
+  lcd.print("FILIPEFLOP");
+  lcd.setCursor(3, 1);
+  lcd.print(" LCD 16x2");
+  delay(5000);
+    
+  //Rolagem para a esquerda
+  for (int posicao = 0; posicao < 3; posicao++)
+  {
+    lcd.scrollDisplayLeft();
+    delay(300);
+  }
+    
+  //Rolagem para a direita
+  for (int posicao = 0; posicao < 6; posicao++)
+  {
+    lcd.scrollDisplayRight();
+    delay(300);
+  }
+
   //Módulo RTC - Relógio
   DateTime now = rtc.now();  
   Serial.print(now.year(), DEC);  
