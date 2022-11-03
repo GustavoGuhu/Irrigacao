@@ -14,7 +14,6 @@ void setup()
   //Piscar LED
   pinMode(LED_BUILTIN, OUTPUT);
 
-
   //Módulo RTC - Relógio  
   if (!rtc.begin()) 
   {  
