@@ -83,6 +83,48 @@ void loop()
   delay(1000);                      // wait for a second
   digitalWrite(LED_BUILTIN, LOW);   // turn the LED off by making the voltage LOW
   delay(1000);                      // wait for a second
+
+//Bomba D'Água
+
+const int bomba = 13; void setup() {  // inicializando comunicação com a porta serial  Serial.begin(9600);
+
+  pinMode(bomba, OUTPUT);
+
+}
+
+void loop() {
+
+  //Lê o valor do potenciômetro
+
+  int sensorValue = analogRead(A0);   
+
+  //Escreve na tela
+
+  Serial.println(sensorValue);
+
+  if(sensorValue > 800){     
+
+      digitalWrite(bomba, LOW);     
+
+      Serial.println("Bomba Desligada!");          
+
+  }
+
+  if(sensorValue < 600){     
+
+      digitalWrite(bomba, HIGH);
+
+      Serial.println("Bomba Ligada!");    
+
+  }    
+
+  delay(1000);
+
+}
+
+
+
+
 }
 
   
