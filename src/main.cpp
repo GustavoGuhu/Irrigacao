@@ -15,7 +15,7 @@ void setup()
   pinMode(LED_BUILTIN, OUTPUT);
 
 
-  //Módulo RTC  
+  //Módulo RTC - Relógio  
   if (!rtc.begin()) 
   {  
     Serial.println("Couldn't find RTC");  
@@ -39,6 +39,7 @@ void setup()
 
 void loop() 
 {
+  //Módulo RTC - Relógio
   DateTime now = rtc.now();  
   Serial.print(now.year(), DEC);  
   Serial.print('/');  
@@ -77,7 +78,11 @@ void loop()
   Serial.println();  
   delay(3000);  
 
-  // put your main code here, to run repeatedly:
+  // Piscar LED 
+  digitalWrite(LED_BUILTIN, HIGH);  // turn the LED on (HIGH is the voltage level)
+  delay(1000);                      // wait for a second
+  digitalWrite(LED_BUILTIN, LOW);   // turn the LED off by making the voltage LOW
+  delay(1000);                      // wait for a second
 }
 
   
