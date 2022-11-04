@@ -1,7 +1,8 @@
 #include <Arduino.h>
 
 #include <Wire.h>  
-#include <RTClib.h>  
+#include <RTClib.h> 
+#include <SPI.h> 
 RTC_DS1307 rtc;  
 char daysOfTheWeek[7][12] = {"Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"}; 
 
@@ -21,11 +22,16 @@ int pushbutton = 2; // declara o push button na porta 2
 int led = 13; // declara led na porta 13
 bool estadoled = 0; // variavel de controle
 
+//Bomba D'Água
+ const int bomba = 13;
 
 void setup() 
 {
   while (!Serial); // for Leonardo/Micro/Zero  
   Serial.begin(9600);
+
+  //Bomba D'Água
+  pinMode(bomba, OUTPUT);
 
   //LCD 
   lcd.begin(16, 2);
@@ -140,43 +146,35 @@ void loop()
   digitalWrite(LED_BUILTIN, LOW);   // turn the LED off by making the voltage LOW
   delay(1000);                      // wait for a second
 
-//Bomba D'Água
+// //Bomba D'Água
 
-const int bomba = 13; void setup() {  // inicializando comunicação com a porta serial  Serial.begin(9600);
+   //Lê o valor do potenciômetro
 
-  pinMode(bomba, OUTPUT);
+   int sensorValue = analogRead(A0);   
 
-}
-
-void loop() {
-
-  //Lê o valor do potenciômetro
-
-  int sensorValue = analogRead(A0);   
-
-  //Escreve na tela
+   //Escreve na tela
 
   Serial.println(sensorValue);
 
-  if(sensorValue > 800){     
+   if(sensorValue > 800){     
 
-      digitalWrite(bomba, LOW);     
+       digitalWrite(bomba, LOW);     
 
-      Serial.println("Bomba Desligada!");          
+       Serial.println("Bomba Desligada!");          
 
-  }
+   }
 
-  if(sensorValue < 600){     
+   if(sensorValue < 600){     
 
-      digitalWrite(bomba, HIGH);
+       digitalWrite(bomba, HIGH);
 
-      Serial.println("Bomba Ligada!");    
+       Serial.println("Bomba Ligada!");    
 
-  }    
+   }    
 
-  delay(1000);
+   _delay_ms(1000);
 
-}
+ 
 
 
 
